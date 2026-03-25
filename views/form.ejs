@@ -5,68 +5,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= mode === 'edit' ? 'Sua ve' : 'Them ve' %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
-    <div class="page-bg"></div>
-    <main class="container form-page">
-        <section class="card form-card">
-            <h1><%= mode === 'edit' ? 'Sua thong tin ve' : 'Them ve moi' %></h1>
-            <p class="subtitle">Nhap day du thong tin theo yeu cau de thi</p>
+<body class="bg-light">
+    <main class="container py-4">
+        <section class="card border-0 shadow-sm mx-auto" style="max-width: 760px;">
+            <div class="card-body p-3 p-md-4">
+            <h1 class="h4 mb-1"><%= mode === 'edit' ? 'Sua thong tin ve' : 'Them ve moi' %></h1>
+            <p class="text-muted mb-3">Nhap day du thong tin theo yeu cau de thi</p>
 
             <% if (errors && errors.length > 0) { %>
-                <div class="error-box">
+                <div class="alert alert-danger py-2">
                     <% errors.forEach((error) => { %>
-                        <p><%= error %></p>
+                        <p class="mb-1"><%= error %></p>
                     <% }) %>
                 </div>
             <% } %>
 
-            <form action="<%= mode === 'edit' ? '/tickets/' + ticket.ticketId : '/tickets' %>" method="POST" enctype="multipart/form-data" class="form-grid">
-                <label>
+            <form action="<%= mode === 'edit' ? '/tickets/' + ticket.ticketId : '/tickets' %>" method="POST" enctype="multipart/form-data" class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label class="form-label mb-1">
                     Ma ve
+                    </label>
                     <input
+                        class="form-control"
                         type="text"
                         name="ticketId"
                         placeholder="VD: T001"
                         value="<%= ticket.ticketId || '' %>"
                         <%= mode === 'edit' ? 'readonly' : '' %>
                     >
-                </label>
+                </div>
 
-                <label>
+                <div class="col-12 col-md-6">
+                    <label class="form-label mb-1">
                     Ten su kien
-                    <input type="text" name="eventName" placeholder="VD: Live Concert" value="<%= ticket.eventName || '' %>">
-                </label>
+                    </label>
+                    <input class="form-control" type="text" name="eventName" placeholder="VD: Live Concert" value="<%= ticket.eventName || '' %>">
+                </div>
 
-                <label>
+                <div class="col-12 col-md-6">
+                    <label class="form-label mb-1">
                     Gia ve
-                    <input type="number" name="price" min="1" step="1" placeholder="VD: 500000" value="<%= ticket.price || '' %>">
-                </label>
+                    </label>
+                    <input class="form-control" type="number" name="price" min="1" step="1" placeholder="VD: 500000" value="<%= ticket.price || '' %>">
+                </div>
 
-                <label>
+                <div class="col-12 col-md-6">
+                    <label class="form-label mb-1">
                     So luong
-                    <input type="number" name="quantity" min="0" step="1" placeholder="VD: 120" value="<%= ticket.quantity || '' %>">
-                </label>
+                    </label>
+                    <input class="form-control" type="number" name="quantity" min="0" step="1" placeholder="VD: 120" value="<%= ticket.quantity || '' %>">
+                </div>
 
-                <label class="full-row">
+                <div class="col-12">
+                    <label class="form-label mb-1">
                     Anh ve
-                    <input type="file" name="image" accept="image/*">
-                </label>
+                    </label>
+                    <input class="form-control" type="file" name="image" accept="image/*">
+                </div>
 
                 <% if (ticket.imageUrl) { %>
-                    <div class="full-row">
-                        <p class="muted">Anh hien tai:</p>
-                        <img class="thumb" src="<%= ticket.imageUrl %>" alt="ticket-image">
+                    <div class="col-12">
+                        <p class="text-muted mb-2">Anh hien tai:</p>
+                        <img class="thumb img-thumbnail" src="<%= ticket.imageUrl %>" alt="ticket-image">
                     </div>
                 <% } %>
 
-                <div class="full-row form-actions">
-                    <button class="btn primary" type="submit"><%= mode === 'edit' ? 'Cap nhat' : 'Them moi' %></button>
-                    <a class="btn ghost" href="/">Quay lai danh sach</a>
+                <div class="col-12 d-flex gap-2">
+                    <button class="btn btn-primary" type="submit"><%= mode === 'edit' ? 'Cap nhat' : 'Them moi' %></button>
+                    <a class="btn btn-outline-secondary" href="/">Quay lai danh sach</a>
                 </div>
             </form>
+            </div>
         </section>
     </main>
 
