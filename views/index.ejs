@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quan ly</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-bg"></div>
+    <main class="container">
+        <header class="topbar">
+            <div>
+                <h1>Quan ly</h1>
+            </div>
+            <a class="btn primary" href="/tickets/new">+ Them ve</a>
+        </header>
+
+        <section class="card">
+            <form class="search-row" method="GET" action="/">
+                <input type="text" name="keyword" placeholder="Tim theo ten su kien..." value="<%= keyword || '' %>">
+                <button class="btn" type="submit">Tim kiem</button>
+                <a class="btn ghost" href="/">Xoa loc</a>
+            </form>
+
+            <% if (message) { %>
+                <p class="notice"><%= message %></p>
+            <% } %>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Event</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>State</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (!tickets || tickets.length === 0) { %>
+                            <tr>
+                                <td colspan="7" class="empty">Khong co du lieu</td>
+                            </tr>
+                        <% } %>
+
+                        <% (tickets || []).forEach((ticket) => { %>
+                            <tr>
+                                <td><%= ticket.ticketId %></td>
+                                <td><%= ticket.eventName %></td>
+                                <td><%= Number(ticket.price).toLocaleString('vi-VN') %> VND</td>
+                                <td><%= ticket.quantity %></td>
+                                <td>
+                                    <span class="badge <%= ticket.status === 'Het ve' ? 'soldout' : (ticket.status === 'Sap het' ? 'low' : 'in') %>">
+                                        <%= ticket.status %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <% if (ticket.imageUrl) { %>
+                                        <img class="thumb" src="<%= ticket.imageUrl %>" alt="ticket-image">
+                                    <% } else { %>
+                                        <span class="muted">Khong co</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="btn small" href="/tickets/<%= ticket.ticketId %>/edit">Sua</a>
+                                        <form method="POST" action="/tickets/<%= ticket.ticketId %>/delete" onsubmit="return confirm('Ban chac chan muon xoa?');">
+                                            <button class="btn danger small" type="submit">Xoa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+</body>
+
+</html>

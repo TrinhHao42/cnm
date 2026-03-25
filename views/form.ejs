@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= mode === 'edit' ? 'Sua ve' : 'Them ve' %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-bg"></div>
+    <main class="container form-page">
+        <section class="card form-card">
+            <h1><%= mode === 'edit' ? 'Sua thong tin ve' : 'Them ve moi' %></h1>
+            <p class="subtitle">Nhap day du thong tin theo yeu cau de thi</p>
+
+            <% if (errors && errors.length > 0) { %>
+                <div class="error-box">
+                    <% errors.forEach((error) => { %>
+                        <p><%= error %></p>
+                    <% }) %>
+                </div>
+            <% } %>
+
+            <form action="<%= mode === 'edit' ? '/tickets/' + ticket.ticketId : '/tickets' %>" method="POST" enctype="multipart/form-data" class="form-grid">
+                <label>
+                    Ma ve
+                    <input
+                        type="text"
+                        name="ticketId"
+                        placeholder="VD: T001"
+                        value="<%= ticket.ticketId || '' %>"
+                        <%= mode === 'edit' ? 'readonly' : '' %>
+                    >
+                </label>
+
+                <label>
+                    Ten su kien
+                    <input type="text" name="eventName" placeholder="VD: Live Concert" value="<%= ticket.eventName || '' %>">
+                </label>
+
+                <label>
+                    Gia ve
+                    <input type="number" name="price" min="1" step="1" placeholder="VD: 500000" value="<%= ticket.price || '' %>">
+                </label>
+
+                <label>
+                    So luong
+                    <input type="number" name="quantity" min="0" step="1" placeholder="VD: 120" value="<%= ticket.quantity || '' %>">
+                </label>
+
+                <label class="full-row">
+                    Anh ve
+                    <input type="file" name="image" accept="image/*">
+                </label>
+
+                <% if (ticket.imageUrl) { %>
+                    <div class="full-row">
+                        <p class="muted">Anh hien tai:</p>
+                        <img class="thumb" src="<%= ticket.imageUrl %>" alt="ticket-image">
+                    </div>
+                <% } %>
+
+                <div class="full-row form-actions">
+                    <button class="btn primary" type="submit"><%= mode === 'edit' ? 'Cap nhat' : 'Them moi' %></button>
+                    <a class="btn ghost" href="/">Quay lai danh sach</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+</body>
+
+</html>
