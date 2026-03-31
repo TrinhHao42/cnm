@@ -8,5 +8,5 @@ exports.awsConfig = {
     }
 }
 
-exports.BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME
-exports.TABLE_NAME = process.env.DYNAMODB_TABLE
+exports.BUCKET_NAME = process.env.S3_BUCKET_NAME
+exports.TABLE_NAME = process.env.DYNAMODB_TABLE_NAME
