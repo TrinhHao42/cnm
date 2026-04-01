@@ -20,14 +20,15 @@
             <div class="card-body">
                 <form class="row g-2" method="GET" action="/">
                     <div class="col-md-4">
-                        <input class="form-control form-control-sm" type="text" name="keyword" placeholder="Tim theo ten..." value="<%= keyword || '' %>">
+                        <input class="form-control form-control-sm" type="text" name="keyword"
+                            placeholder="Tim theo ten..." value="<%= keyword || '' %>">
                     </div>
                     <div class="col-md-3">
                         <select class="form-control form-control-sm" name="type">
                             <option value="">-- Tat ca loai --</option>
-                            <option value="VIP" <%= type === 'VIP' ? 'selected' : '' %>>VIP</option>
-                            <option value="Standard" <%= type === 'Standard' ? 'selected' : '' %>>Standard</option>
-                            <option value="Economy" <%= type === 'Economy' ? 'selected' : '' %>>Economy</option>
+                            <option value="VIP" <%=type==='VIP' ? 'selected' : '' %>>VIP</option>
+                            <option value="Standard" <%=type==='Standard' ? 'selected' : '' %>>Standard</option>
+                            <option value="Economy" <%=type==='Economy' ? 'selected' : '' %>>Economy</option>
                         </select>
                     </div>
                     <div class="col-auto">
@@ -36,50 +37,70 @@
                     </div>
                     <div class="col-md d-flex align-items-center justify-content-md-end">
                         <span class="small text-muted me-2">Tong tien:</span>
-                        <span class="fw-semibold text-primary"><%= totalAmount.toLocaleString('vi-VN') %> VND</span>
+                        <span class="fw-semibold text-primary">
+                            <%= totalAmount.toLocaleString('vi-VN') %> VND
+                        </span>
                     </div>
                 </form>
             </div>
         </div>
 
         <div class="row g-4">
-            <% if (!tickets || tickets.length === 0) { %>
+            <% if (!tickets || tickets.length===0) { %>
                 <div class="col-12">
                     <div class="alert alert-secondary mb-0">Khong co du lieu</div>
                 </div>
-            <% } %>
+                <% } %>
 
-            <% (tickets || []).forEach((t) => { %>
-                <div class="col-8 col-md-4 col-lg-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <% if (t.imageUrl) { %>
-                            <img src="<%= t.imageUrl %>" alt="<%= t.eventName %>" class="card-img-top" style="height: 180px; object-fit: cover;">
-                        <% } else { %>
-                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
-                                <span class="text-muted">Khong co anh</span>
-                            </div>
-                        <% } %>
+                    <% (tickets || []).forEach((t)=> { %>
+                        <div class="col-8 col-md-4 col-lg-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <% if (t.imageUrl) { %>
+                                    <img src="<%= t.imageUrl %>" alt="<%= t.eventName %>" class="card-img-top"
+                                        style="height: 180px; object-fit: cover;">
+                                    <% } else { %>
+                                        <div class="bg-light d-flex align-items-center justify-content-center"
+                                            style="height: 180px;">
+                                            <span class="text-muted">Khong co anh</span>
+                                        </div>
+                                        <% } %>
 
-                        <div class="card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0"><%= t.eventName %></h5>
-                                <span class="badge text-bg-<%= t.status === 'Het ve' ? 'danger' : (t.status === 'Sap het' ? 'warning' : 'success') %>"><%= t.status %></span>
-                            </div>
+                                            <div class="card-body d-flex flex-column">
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <h5 class="card-title mb-0">
+                                                        <%= t.eventName %>
+                                                    </h5>
+                                                    <span
+                                                        class="badge text-bg-<%= t.status === 'Het ve' ? 'danger' : (t.status === 'Sap het' ? 'warning' : 'success') %>">
+                                                        <%= t.status %>
+                                                    </span>
+                                                </div>
 
-                            <p class="text-muted small mb-2">ID: <%= t.ticketId %></p>
-                            <p class="mb-1">Loai: <strong><span class="badge text-bg-info"><%= t.type || '-' %></span></strong></p>
-                            <p class="mb-1">Gia: <strong><%= Number(t.price || 0).toLocaleString('vi-VN') %> VND</strong></p>
-                            <p class="mb-3">So luong: <strong><%= t.quantity %></strong></p>
+                                                <p class="text-muted small mb-2">ID: <%= t.ticketId %>
+                                                </p>
+                                                <p class="mb-1">Loai: <strong><span class="badge text-bg-info">
+                                                            <%= t.type || '-' %>
+                                                        </span></strong></p>
+                                                <p class="mb-1">Gia: <strong>
+                                                        <%= Number(t.price || 0).toLocaleString('vi-VN') %> VND
+                                                    </strong></p>
+                                                <p class="mb-3">So luong: <strong>
+                                                        <%= t.quantity %>
+                                                    </strong></p>
 
-                            <div class="mt-auto d-flex gap-1 flex-wrap">
-                                <a class="btn btn-sm btn-outline-primary" href="/tickets/<%= t.ticketId %>">Chi tiet</a>
-                                <a class="btn btn-sm btn-outline-warning" href="/tickets/<%= t.ticketId %>/edit">Sua</a>
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-target="#deleteModal" data-ticketid="<%= t.ticketId %>">Xoa</button>
+                                                <div class="mt-auto d-flex gap-1 flex-wrap">
+                                                    <a class="btn btn-sm btn-outline-primary"
+                                                        href="/tickets/<%= t.ticketId %>">Chi tiet</a>
+                                                    <a class="btn btn-sm btn-outline-warning"
+                                                        href="/tickets/<%= t.ticketId %>/edit">Sua</a>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                        data-bs-target="#deleteModal"
+                                                        data-ticketid="<%= t.ticketId %>">Xoa</button>
+                                                </div>
+                                            </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            <% }) %>
+                        <% }) %>
         </div>
     </main>
 
@@ -102,7 +123,8 @@
     </div>
 
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body" id="toastMessage"></div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
