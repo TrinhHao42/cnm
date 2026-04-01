@@ -25,7 +25,12 @@ exports.getList = async (req, res) => {
     }
     const data = await docClient.send(new ScanCommand(params))
     const tickets = (data.Items || []).map(t => ({ ...t, type: t.typeTicket, status: getStatus(Number(t.quantity)) }))
-    res.render('index', { tickets, keyword, type, message: String(req.query.message || '') })
+    const totalAmount = tickets.reduce((sum, t) => {
+        const price = Number(t.price) || 0
+        const quantity = Number(t.quantity) || 0
+        return sum + (price * quantity)
+    }, 0)
+    res.render('index', { tickets, keyword, type, totalAmount, message: String(req.query.message || '') })
 }
 
 exports.showCreateForm = (req, res) => {
