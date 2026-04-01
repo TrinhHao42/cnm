@@ -3,7 +3,8 @@ function normalizeTicketInput(body) {
         ticketId: String(body.ticketId || '').trim(),
         eventName: String(body.eventName || '').trim(),
         price: Number(body.price),
-        quantity: Number(body.quantity)
+        quantity: Number(body.quantity),
+        type: String(body.type || '').trim()
     }
 }
 
@@ -13,6 +14,7 @@ function validateTicket(data) {
     if (!data.eventName || data.eventName.length < 3) errors.push('Ten su kien phai co it nhat 3 ky tu')
     if (Number.isNaN(data.price) || data.price <= 0) errors.push('Gia ve phai > 0')
     if (Number.isNaN(data.quantity) || data.quantity < 0) errors.push('So luong phai >= 0')
+    if (!data.type || !['VIP', 'Standard', 'Economy'].includes(data.type)) errors.push('Loai ve khong hop le')
     return errors
 }
 

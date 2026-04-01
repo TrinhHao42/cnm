@@ -40,6 +40,13 @@
                             <div class="col-md-6"><label class="form-label">So luong</label> <input
                                     class="form-control form-control-sm" type="number" name="quantity" min="0"
                                     value="<%= ticket.quantity || '' %>"></div>
+                            <div class="col-md-6"><label class="form-label">Loai ve</label> <select
+                                    class="form-control form-control-sm" name="type">
+                                    <option value="" <%= !(ticket.typeTicket || ticket.type) ? 'selected' : '' %>>-- Chon loai --</option>
+                                    <option value="VIP" <%= (ticket.typeTicket || ticket.type) === 'VIP' ? 'selected' : '' %>>VIP</option>
+                                    <option value="Standard" <%= (ticket.typeTicket || ticket.type) === 'Standard' ? 'selected' : '' %>>Standard</option>
+                                    <option value="Economy" <%= (ticket.typeTicket || ticket.type) === 'Economy' ? 'selected' : '' %>>Economy</option>
+                                </select></div>
                             <div class="col-12"><label class="form-label">Anh ve</label> <input
                                     class="form-control form-control-sm" type="file" name="image" accept="image/*">
                             </div>

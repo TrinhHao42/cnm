@@ -26,7 +26,7 @@
                             class="img-fluid rounded mb-3" style="max-height: 400px; object-fit: cover; width: 100%;">
                         <% } %>
                             <div class="row g-2 mb-3">
-                                <div class="col-md-6">
+                                <div class=\"col-md-4\">
                                     <div class="card">
                                         <div class="card-body py-2"><small class="text-muted">Gia ve</small>
                                             <h5>
@@ -36,11 +36,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-body py-2"><small class="text-muted">So luong</small>
+                                <div class=\"col-md-4\">
+                                    <div class=\"card\">
+                                        <div class=\"card-body py-2\"><small class=\"text-muted\">So luong</small>
                                             <h5>
                                                 <%= ticket.quantity %> ve
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=\"col-md-4\">
+                                    <div class=\"card\">
+                                        <div class=\"card-body py-2\"><small class=\"text-muted\">Loai ve</small>
+                                            <h5>
+                                                <span class=\"badge text-bg-info\"><%= ticket.typeTicket || ticket.type || '-' %></span>
                                             </h5>
                                         </div>
                                     </div>
@@ -84,7 +93,7 @@
         </div>
     </div>
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-        <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-message="<%= message || '' %>">
+        <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-message="<%= typeof message !== 'undefined' ? message : '' %>">
             <div class="toast-header bg-success text-white">
                 <strong class="me-auto">✓ Thông báo</strong>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>

@@ -12,14 +12,20 @@ const getById = async (id) => {
 
 exports.getList = async (req, res) => {
     const keyword = String(req.query.keyword || '').trim()
+    const type = String(req.query.type || '').trim()
     const params = { TableName: TABLE_NAME }
-    if (keyword) {
-        params.FilterExpression = 'contains(eventName, :kw)'
-        params.ExpressionAttributeValues = { ':kw': keyword }
+    const filters = []
+    if (keyword) filters.push('contains(eventName, :kw)')
+    if (type) filters.push('typeTicket = :type')
+    if (filters.length > 0) {
+        params.FilterExpression = filters.join(' AND ')
+        params.ExpressionAttributeValues = {}
+        if (keyword) params.ExpressionAttributeValues[':kw'] = keyword
+        if (type) params.ExpressionAttributeValues[':type'] = type
     }
     const data = await docClient.send(new ScanCommand(params))
-    const tickets = (data.Items || []).map(t => ({ ...t, status: getStatus(Number(t.quantity)) }))
-    res.render('index', { tickets, keyword, message: String(req.query.message || '') })
+    const tickets = (data.Items || []).map(t => ({ ...t, type: t.typeTicket, status: getStatus(Number(t.quantity)) }))
+    res.render('index', { tickets, keyword, type, message: String(req.query.message || '') })
 }
 
 exports.showCreateForm = (req, res) => {
@@ -36,18 +42,21 @@ exports.create = async (req, res) => {
     let imageUrl = ''
     if (req.file) imageUrl = await uploadToS3(req.file)
     try {
+        const item = { ...req.validatedTicket, typeTicket: req.validatedTicket.type, imageUrl, createdAt: new Date().toISOString() }
+        delete item.type
         await docClient.send(new PutCommand({
             TableName: TABLE_NAME,
-            Item: { ...req.validatedTicket, imageUrl, createdAt: new Date().toISOString() },
+            Item: item,
             ConditionExpression: 'attribute_not_exists(ticketId)'
         }))
         res.redirect('/?message=Them+ve+thanh+cong')
     } catch (error) {
         if (isS3Url(imageUrl)) await deleteFromS3(imageUrl)
+        const ticket = { ...req.body, typeTicket: req.body.type }
         res.status(400).render('form', {
             mode: 'create',
             errors: error?.name === 'ConditionalCheckFailedException' ? ['Ma ve da ton tai'] : ['Khong the them ve'],
-            ticket: req.body
+            ticket
         })
     }
 }
@@ -60,11 +69,12 @@ exports.update = async (req, res) => {
     await docClient.send(new UpdateCommand({
         TableName: TABLE_NAME,
         Key: { ticketId: req.params.ticketId },
-        UpdateExpression: 'SET eventName = :n, price = :p, quantity = :q, imageUrl = :i, updatedAt = :u',
+        UpdateExpression: 'SET eventName = :n, price = :p, quantity = :q, typeTicket = :t, imageUrl = :i, updatedAt = :u',
         ExpressionAttributeValues: {
             ':n': req.validatedTicket.eventName,
             ':p': req.validatedTicket.price,
             ':q': req.validatedTicket.quantity,
+            ':t': req.validatedTicket.type,
             ':i': newImageUrl,
             ':u': new Date().toISOString()
         }
@@ -78,7 +88,7 @@ exports.update = async (req, res) => {
 exports.showDetail = async (req, res) => {
     const ticket = await getById(req.params.ticketId)
     if (!ticket) return res.redirect('/?message=Khong+tim+thay+ve')
-    res.render('detail', { ticket })
+    res.render('detail', { ticket, message: String(req.query.message || '') })
 }
 
 exports.deleteTicket = async (req, res) => {
